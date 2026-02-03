@@ -134,7 +134,7 @@
     </div>
    </div><!-- Level 2: Guess Color -->
    <div id="level2-screen" class="min-h-full w-full flex-col items-center justify-center p-8" style="display: none;">
-    <h1 class="text-5xl font-bold text-center mb-4 glow-animation" style="color: #FFB6C1; font-family: 'Georgia', serif;">Уровень 2: Какой твой любимый цвет? 🎨</h1>
+    <h1 class="text-5xl font-bold text-center mb-4 glow-animation" style="color: #FFB6C1; font-family: 'Georgia', serif;">Уровень 2: Какой твой любимый цвет? Знаю что зеленый, это для подсветки кое какой надо 💝 </h1>
     <p class="text-2xl text-center mb-8" style="color: #FFB6C1; font-family: 'Georgia', serif;">Выбери цвет, который нравится тебе больше всего!</p>
     <div class="flex flex-wrap gap-6 justify-center max-w-3xl mx-auto">
      <div class="color-choice w-32 h-32 rounded-full cursor-pointer transition-transform hover:scale-110" style="background: #FF0000;" data-color="#FF0000"></div>
@@ -189,7 +189,7 @@
      <div id="message-container" class="text-center" style="min-height: 150px;">
       <div id="big-heart-container" class="hidden mb-8"></div>
       <div id="message" class="message-box rounded-2xl p-8 mx-auto max-w-2xl hidden">
-       <p id="message-text" class="text-2xl leading-relaxed" style="color: #FFB6C1; font-family: 'Georgia', serif;"></p>
+       <p id="message-text" class="text-2xl leading-relaxed" style="color: #FFB6C1; font-family: 'Georgia', serif;"></p><button id="star-button" class="mt-8 px-8 py-4 text-xl font-bold rounded-full transition-all duration-300 hover:scale-110" style="background: linear-gradient(135deg, #FF69B4, #FFB6C1); color: #000; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); display: none; border: none; cursor: pointer;"> Озеро, где мы должны побывать 💕 </button>
       </div>
      </div>
     </div>
@@ -197,9 +197,9 @@
   </div>
   <script>
     const defaultConfig = {
-      candy_text: "Ты слаще любой конфеты! Каждый момент с тобой — как вкус любимого лакомства. 🍬💕 Твоя улыбка слаще шоколада, а твой смех — вкуснее карамели. Когда ты рядом, весь мир кажется сахарной ватой. Ты — моя любимая сладость, которой никогда не бывает достаточно. Каждый день с тобой — это как открывать новую коробку конфет, полную сюрпризов. Твоя нежность тает во мне, как конфета на языке. Ты делаешь мою жизнь такой сладкой и прекрасной. Я хочу делиться с тобой каждым сладким мгновением нашей жизни. Ты — мой любимый вкус счастья. Люблю тебя больше, чем все конфеты в мире! 💖",
-      bouquet_text: "Эти цветы не сравнятся с твоей красотой. Ты — самый прекрасный цветок в моей жизни. 🌸💖 Как розы нуждаются в солнце, так и я нуждаюсь в тебе. Твоя красота цветёт в моём сердце каждый день. Ты ароматнее самого нежного букета. Каждый лепесток этих цветов — это моя мысль о тебе. Ты расцветаешь в моей душе, как весенний сад. Твои глаза ярче любых цветов. Я готов дарить тебе цветы каждый день, лишь бы видеть твою улыбку. Ты — мой самый редкий и драгоценный цветок. С тобой моя жизнь расцветает всеми красками радуги. Люблю тебя, моя прекрасная! 🌹",
-      card_text: "Прости любимая что это не тот заяц которого ты хотела, нету цветков из проволки тех, и хоть мы на расстоянии, я всё равно тебя очень сильно люблю и верю что мы когда-то встретимся вживую, и я смогу дарить тебе нормальные подарки)) 💝"
+      candy_text: "Ты слаще любой конфеты! Каждый момент с тобой - как вкус любимого лакомства. 🍬💕 Твоя улыбка слаще шоколада, а твой смех - вкуснее карамели. Когда ты рядом, весь мир кажется сахарной ватой. Ты - моя любимая сладость, которой никогда не бывает достаточно. Каждый день с тобой - это как открывать новую коробку конфет, полную сюрпризов. Твоя нежность тает во мне, как конфета на языке. Ты делаешь мою жизнь такой сладкой и прекрасной. Я хочу делиться с тобой каждым сладким мгновением нашей жизни. Ты - мой любимый вкус счастья. Люблю тебя больше, чем все конфеты в мире! 💖",
+      bouquet_text: "Эти цветы не сравнятся с твоей красотой. Ты - самый прекрасный цветок в моей жизни. 🌸💖 Как розы нуждаются в солнце, так и я нуждаюсь в тебе. Твоя красота цветёт в моём сердце каждый день. Ты ароматнее самого нежного букета. Каждый лепесток этих цветов - это моя мысль о тебе. Ты расцветаешь в моей душе, как весенний сад. Твои глаза ярче любых цветов. Я готов дарить тебе цветы каждый день, лишь бы видеть твою улыбку. Ты - мой самый редкий и драгоценный цветок. С тобой моя жизнь расцветает всеми красками радуги. Люблю тебя, моя прекрасная! 🌹",
+      card_text: "Прости, любимая, что это не тот заяц, которого ты хотела, нету цветков из проволки тех, и хоть мы на расстоянии, я всё равно тебя очень сильно люблю и верю, что мы когда-то встретимся вживую, и я смогу дарить тебе нормальные подарки)) 💝"
     };
 
     let config = { ...defaultConfig };
@@ -439,15 +439,20 @@
           heartContainer.classList.remove('hidden');
           showMessage(config.card_text || defaultConfig.card_text);
           
+          // Показываем кнопку со звё��дами
+          const starButton = document.getElementById('star-button');
+          starButton.style.display = 'inline-block';
+          
           // Запускаем падающие сердечки
           startFallingHearts();
-          
-          // Закрываем сайт через 10 секунд после показа сообщения
-          setTimeout(() => {
-            window.close();
-          }, 1000000);
         }, 1800);
       }
+    });
+
+    // Обработчик кнопки озера-сердечка
+    document.getElementById('star-button').addEventListener('click', () => {
+      // Открываем озеро Тойони в форме сердца на карте
+      window.open('https://www.google.com/maps/place/Toyoni+Lake/@42.0898215,143.267318,1245m/data=!3m1!1e3!4m6!3m5!1s0x5f7694bf01467bcd:0xda595bd4d533a1d2!8m2!3d42.0894824!4d143.2716775!16s%2Fg%2F120n82n1?entry=ttu&g_ep=EgoyMDI2MDEyOC4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D', '_blank', 'noopener,noreferrer');
     });
 
     if (window.elementSdk) {
@@ -486,6 +491,5 @@
       });
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c79ff4503a32deb',t:'MTc3MDAzODU0NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c83a73e552977b0',t:'MTc3MDEzOTc5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-
