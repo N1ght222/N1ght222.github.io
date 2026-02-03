@@ -119,6 +119,44 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.1); }
     }
+
+    /* Bunny animations */
+    @keyframes bunny-wiggle {
+      0%, 100% { transform: rotate(0deg) scale(1.5); }
+      25% { transform: rotate(-15deg) scale(1.5); }
+      75% { transform: rotate(15deg) scale(1.5); }
+    }
+
+    @keyframes bunny-shrink {
+      0% { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+
+    .bunny-container {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .bunny-wiggling {
+      animation: bunny-wiggle 1.5s ease-in-out infinite;
+    }
+
+    .bunny-clicked {
+      animation: bunny-shrink 0.5s ease-out forwards;
+    }
+
+    .gifts-hidden {
+      opacity: 0;
+      transform: scale(0);
+      pointer-events: none;
+    }
+
+    .gifts-visible {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -156,10 +194,11 @@
     <h1 id="title" class="text-5xl font-bold text-center mb-12 glow-animation" style="color: #FFB6C1; font-family: 'Georgia', serif; transition: opacity 0.5s ease;">Подарочек для любимой 🎁</h1>
     <div class="relative w-full max-w-4xl mx-auto"><!-- Bunny SVG -->
      <div class="flex justify-center mb-8">
-      <div class="float-animation" style="transition: opacity 0.5s ease;"><img src="https://www.svgrepo.com/show/267732/bunny-rabbit.svg" alt="Милый зайчик" width="200" height="200" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#FFB6C1'; this.alt='Зайчик недоступен';">
+      <div id="bunny-container" class="bunny-container bunny-wiggling float-animation" style="transition: opacity 0.5s ease;">
+       <img src="https://www.svgrepo.com/show/267732/bunny-rabbit.svg" alt="Милый зайчик" width="300" height="300" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.background='#FFB6C1'; this.alt='Зайчик недоступен';">
       </div>
      </div><!-- Gift Items -->
-     <div class="flex justify-around items-center flex-wrap gap-8 mb-12"><!-- Candy -->
+     <div id="gifts-container" class="flex justify-around items-center flex-wrap gap-8 mb-12 gifts-hidden"><!-- Candy -->
       <div class="gift-item" id="candy">
        <svg width="100" height="100" viewbox="0 0 100 100"><ellipse cx="50" cy="50" rx="25" ry="30" fill="#FF1493" opacity="0.8" /> <rect x="25" y="45" width="50" height="10" fill="#FF69B4" rx="5" /> <path d="M30 50 L20 45 L20 55 Z" fill="#FF1493" /> <path d="M70 50 L80 45 L80 55 Z" fill="#FF1493" /> <circle cx="50" cy="50" r="3" fill="#FFF" />
        </svg>
@@ -189,7 +228,7 @@
      <div id="message-container" class="text-center" style="min-height: 150px;">
       <div id="big-heart-container" class="hidden mb-8"></div>
       <div id="message" class="message-box rounded-2xl p-8 mx-auto max-w-2xl hidden">
-       <p id="message-text" class="text-2xl leading-relaxed" style="color: #FFB6C1; font-family: 'Georgia', serif;"></p><button id="star-button" class="mt-8 px-8 py-4 text-xl font-bold rounded-full transition-all duration-300 hover:scale-110" style="background: linear-gradient(135deg, #FF69B4, #FFB6C1); color: #000; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); display: none; border: none; cursor: pointer;"> Озеро, где мы должны побывать 💕 </button>
+       <p id="message-text" class="text-2xl leading-relaxed" style="color: #FFB6C1; font-family: 'Georgia', serif;"></p><button id="star-button" class="mt-8 px-8 py-4 text-xl font-bold rounded-full transition-all duration-300 hover:scale-110" style="background: linear-gradient(135deg, #FF69B4, #FFB6C1); color: #000; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); display: none; border: none; cursor: pointer;"> Озеро в виде сердечка, где мы должны побывать 💕 </button>
       </div>
      </div>
     </div>
@@ -204,6 +243,7 @@
 
     let config = { ...defaultConfig };
     let cardOpened = false;
+    let bunnyClicked = false;
     let heartsCollected = 0;
     const totalHearts = 10;
     let currentLevel = 1;
@@ -356,6 +396,25 @@
       flippedCards = [];
     }
 
+    // BUNNY CLICK HANDLER
+    document.getElementById('bunny-container').addEventListener('click', () => {
+      if (!bunnyClicked) {
+        bunnyClicked = true;
+        const bunnyContainer = document.getElementById('bunny-container');
+        const giftsContainer = document.getElementById('gifts-container');
+        
+        // Stop wiggling and start shrinking
+        bunnyContainer.classList.remove('bunny-wiggling');
+        bunnyContainer.classList.add('bunny-clicked');
+        
+        // Show gifts after bunny shrinks
+        setTimeout(() => {
+          giftsContainer.classList.remove('gifts-hidden');
+          giftsContainer.classList.add('gifts-visible');
+        }, 500);
+      }
+    });
+
     async function onConfigChange(newConfig) {
       config = { ...newConfig };
     }
@@ -420,7 +479,7 @@
         document.getElementById('candy').style.opacity = '0';
         document.getElementById('bouquet').style.opacity = '0';
         document.getElementById('title').style.opacity = '0';
-        document.querySelector('img[alt="Милый зайчик"]').parentElement.style.opacity = '0';
+        document.getElementById('bunny-container').style.opacity = '0';
         
         // Перемещаем открытку в центр
         cardContainer.classList.add('card-moving');
@@ -439,7 +498,7 @@
           heartContainer.classList.remove('hidden');
           showMessage(config.card_text || defaultConfig.card_text);
           
-          // Показываем кнопку со звё��дами
+          // Показываем кнопку со звёздами
           const starButton = document.getElementById('star-button');
           starButton.style.display = 'inline-block';
           
