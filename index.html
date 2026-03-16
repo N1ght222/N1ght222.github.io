@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -26,14 +26,14 @@
     .moon {
       position: fixed; top: 7vh; right: 10vw;
       width: 88px; height: 88px; border-radius: 50%;
-      background: radial-gradient(circle at 38% 32%, #fffde8 0%, #ffe988 35%, #ffd040 70%, #ffb020 100%);
-      box-shadow: 0 0 30px 10px rgba(255,215,60,.28), 0 0 70px 25px rgba(255,190,40,.13), inset -8px -6px 18px rgba(180,110,0,.38);
+      background: radial-gradient(circle at 36% 30%, #f0eeea 0%, #dcdad4 30%, #c8c5bc 60%, #b0ada4 85%, #9a9790 100%);
+      box-shadow: 0 0 18px 6px rgba(220,218,210,.12), 0 0 50px 18px rgba(200,196,185,.07), inset -10px -8px 22px rgba(60,55,48,.32), inset 4px 3px 10px rgba(255,252,245,.18);
       opacity: 0; transform: translateY(-40px) scale(.65);
       transition: opacity 2.2s ease .4s, transform 2.6s cubic-bezier(.34,1.5,.64,1) .2s;
       z-index: 2;
     }
-    .moon::before { content: ''; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: rgba(255,252,200,.45); filter: blur(3px); top: 17%; left: 20%; }
-    .moon::after  { content: ''; position: absolute; width: 9px;  height: 9px;  border-radius: 50%; background: rgba(255,252,200,.28); filter: blur(2px); top: 44%; left: 42%; }
+    .moon::before { content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: rgba(80,75,68,.22); filter: blur(2px); top: 22%; left: 24%; box-shadow: 18px 28px 0 6px rgba(80,75,68,.13), 38px 10px 0 4px rgba(80,75,68,.15); }
+    .moon::after  { content: ''; position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(80,75,68,.18); filter: blur(1.5px); top: 55%; left: 50%; box-shadow: -14px -8px 0 3px rgba(80,75,68,.12); }
     .moon.visible { opacity: 1; transform: translateY(0) scale(1); }
 
     /* ── STARS ── */
@@ -53,7 +53,7 @@
     }
     .shooting-star {
       position: absolute; width: 1.5px; height: 90px;
-      background: linear-gradient(to bottom, #fff, transparent);
+      background: linear-gradient(to top, #fff, transparent);
       opacity: 0; border-radius: 1px;
       animation: shoot 7s var(--sd, 3s) ease-in infinite;
     }
@@ -191,9 +191,32 @@
       box-shadow: 0 4px 22px rgba(190,50,100,.45), 0 0 36px rgba(240,70,120,.12);
       animation: bpulse 2.6s ease-in-out infinite;
       transition: transform .18s, box-shadow .18s;
+      white-space: nowrap;
     }
     .heart-btn:hover { transform: scale(1.07); box-shadow: 0 6px 34px rgba(190,50,100,.7); }
     .heart-btn:active { transform: scale(.96); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .btn-wrap {
+        bottom: max(24px, env(safe-area-inset-bottom, 24px));
+        width: auto;
+      }
+      .heart-btn {
+        font-size: 1.15rem;
+        padding: 14px 32px;
+      }
+      .message-box {
+        padding: 36px 28px;
+        margin: 16px;
+        max-width: calc(100vw - 32px);
+        border-radius: 20px;
+      }
+      .message-text {
+        font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+        line-height: 1.8;
+      }
+    }
     @keyframes bpulse {
       0%,100%{ box-shadow: 0 4px 22px rgba(190,50,100,.45), 0 0 36px rgba(240,70,120,.12); }
       50%    { box-shadow: 0 4px 30px rgba(190,50,100,.75), 0 0 55px rgba(240,70,120,.3); }
@@ -219,9 +242,9 @@
   <div class="message-overlay" id="msgOverlay">
     <div class="message-box">
       <p class="message-text">
-        Звёзд много, а луна — одна,<br>
-        так что ты моя луна)<br><br>
-        Спасибо тебе, что этот год мы вместе <span class="heart">💖</span>
+        Звёзд много, а луна одна —<br>
+        ты моя луна ❤️<br><br>
+        Спасибо тебе за этот год,<br>надеюсь следующие будут только лучше ❤️
       </p>
     </div>
   </div>
