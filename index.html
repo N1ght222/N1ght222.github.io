@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Love You</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  h1 {
+    color: #7ecfff;
+    font-size: 2.8rem;
+    font-weight: 700;
+    font-family: 'Dancing Script', cursive;
+    text-shadow: 0 0 8px #4ab8ff, 0 0 25px #2299ee, 0 0 55px #0066cc;
+    margin-bottom: 10px;
+    animation: textPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes textPulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; text-shadow: 0 0 15px #88ddff, 0 0 45px #44aaff, 0 0 80px #2277dd; }
+  }
+  canvas { display: block; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1>I Love You</h1>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+const W = window.innerWidth;
+const H = window.innerHeight * 0.78;
+canvas.width = W;
+canvas.height = H;
+
+// Проверяем, лежит ли точка (x,y) внутри 2D сердца
+// Сердце задано параметрически: hx=16sin³t, hy=-(13cos t - 5cos2t - 2cos3t - cos4t)
+// Используем упрощённую аналитическую формулу: (x²+y²-1)³ - x²y³ <= 0
+function insideHeart(x, y) {
+  // нормализуем под стандартную формулу
+  const nx = x / 8;
+  const ny = -y / 8 + 0.5; // сдвиг чтобы сердце было по центру
+  const v = Math.pow(nx*nx + ny*ny - 1, 3) - nx*nx * ny*ny*ny;
+  return v <= 0;
+}
+
+const particles = [];
+const NUM = 3000;
+
+// Rejection sampling: генерируем случайные точки в bounding box сердца
+// и оставляем только те, что внутри
+let attempts = 0;
+while (particles.length < NUM && attempts < NUM * 15) {
+  attempts++;
+
+  // Диапазон сердца: x от -17 до 17, y от -14 до 10
+  const hx = (Math.random() * 2 - 1) * 17;
+  const hy = (Math.random() * 2 - 1) * 14;
+
+  if (!insideHeart(hx, hy)) continue;
+
+  // Глубина z — случайная в пределах толщины сердца (эллипсоид)
+  // Толщина зависит от позиции внутри сердца
+  const maxZ = 8 * Math.sqrt(Math.max(0, 1 - (hx/17)*(hx/17) - (hy/14)*(hy/14)));
+  const z = (Math.random() * 2 - 1) * maxZ;
+
+  const brightness = 0.3 + Math.random() * 0.7;
+  const size = 0.5 + Math.random() * 1.8;
+
+  particles.push({ ox: hx, oy: hy, oz: z, brightness, size });
+}
+
+let angle = 0;
+const CX = W / 2;
+const CY = H / 2;
+const SCALE = Math.min(W, H) * 0.026;
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+
+  const cosA = Math.cos(angle);
+  const sinA = Math.sin(angle);
+
+  const proj = [];
+  for (const p of particles) {
+    // Вращение по оси Y
+    const rx = p.ox * cosA - p.oz * sinA;
+    const rz = p.ox * sinA + p.oz * cosA;
+    const ry = p.oy;
+
+    const fov = 400;
+    const depth = fov + rz * SCALE;
+    if (depth <= 0) continue;
+
+    const px = CX + (rx * SCALE * fov) / depth;
+    const py = CY + (ry * SCALE * fov) / depth;
+
+    if (!isFinite(px) || !isFinite(py)) continue;
+
+    // Задние частицы темнее
+    const depthFactor = 0.45 + 0.55 * ((rz + 20) / 40);
+    const bright = Math.min(1, Math.max(0.05, p.brightness * depthFactor));
+
+    proj.push({ px, py, rz, bright, size: p.size });
+  }
+
+  // Сортировка back→front
+  proj.sort((a, b) => a.rz - b.rz);
+
+  // Тень-платформа под сердцем
+  const shadowY = CY + SCALE * 10;
+  const sg = ctx.createRadialGradient(CX, shadowY, 0, CX, shadowY, SCALE * 7);
+  sg.addColorStop(0, 'rgba(50,150,255,0.5)');
+  sg.addColorStop(0.4, 'rgba(20,80,200,0.2)');
+  sg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save();
+  ctx.translate(CX, shadowY);
+  ctx.scale(1, 0.18);
+  ctx.translate(-CX, -shadowY);
+  ctx.beginPath();
+  ctx.arc(CX, shadowY, SCALE * 7, 0, Math.PI * 2);
+  ctx.fillStyle = sg;
+  ctx.fill();
+  ctx.restore();
+
+  // Рисуем частицы
+  for (const p of proj) {
+    const rb = Math.round(80 + p.bright * 90);
+    const gb = Math.round(150 + p.bright * 70);
+    const glowSize = Math.max(0.5, p.size * 2.8);
+
+    try {
+      const grd = ctx.createRadialGradient(p.px, p.py, 0, p.px, p.py, glowSize);
+      grd.addColorStop(0, `rgba(${rb},${gb},255,${p.bright * 0.85})`);
+      grd.addColorStop(0.45, `rgba(${rb},${gb},255,${p.bright * 0.25})`);
+      grd.addColorStop(1, `rgba(${rb},${gb},255,0)`);
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, glowSize, 0, Math.PI * 2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+    } catch(e) {}
+
+    // Ядро точки
+    ctx.beginPath();
+    ctx.arc(p.px, p.py, Math.max(0.3, p.size * 0.5), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${rb},${gb},255,${p.bright})`;
+    ctx.fill();
+  }
+
+  angle += 0.013;
+  requestAnimationFrame(render);
+}
+
+render();
+</script>
+</body>
+</html>
